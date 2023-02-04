@@ -38,7 +38,8 @@ WHERE titles.title = 'Bright Star';
 
 SELECT title, release_year
 FROM "CharlotteChaze/BreakIntoTech"."netflix_titles_info" titles
+WHERE type = 'Movie'
 ORDER BY release_year ASC
 LIMIT 1;
 
-# ANSWER: Pioneers: First Women Filmmakers* released in 1925
+# ANSWER: Prelude to War released in 1942
