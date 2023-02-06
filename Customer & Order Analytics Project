@@ -3,14 +3,91 @@
     
 # 1. How many orders where places in January? 
 
+SELECT COUNT(orderID)
+FROM JanSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID';
+
+# ANSWER: 9,681
+
 # 2. How many of those orders were for an iPhone?
+
+SELECT COUNT(orderID)
+FROM JanSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID'
+AND Product = 'iPhone';
+
+# ANSWER: 379
 
 # 3. Select the customer account numbers for all orders that were placed in February.
 
+SELECT distinct FebSales.orderID, customers.acctnum
+FROM FebSales
+JOIN customers 
+ON FebSales.orderID = customers.order_id
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID';
+
+# QUERY RETURNED 11,986 orderIDs and matching customer account numbers for February
+
 # 4. Which product was the cheapest one sold in January? 
+
+SELECT Product, MIN(price)
+FROM JanSales;
+
+# ANSWER: AAA Batteries (4-pack)	2.99
 
 # 5. What is the total revenue for each product sold in January? 
 
-# 6. Which products were sold in February at 548 Lincoln Street, Seattle, WA 98101, how many of each were sold, and what was the total revenue? 
+SELECT Product, ROUND(SUM(Quantity*price), 2) AS Revenue
+FROM JanSales
+WHERE length(orderID) = 6
+AND orderID <> 'Order ID'
+GROUP BY Product;
+
+# RESULTING TABLE WITH REVENUE BY PRODUCT
+    Product                     Revenue
+    20in Monitor	            23647.85
+    27in 4K Gaming Monitor	    121676.88
+    27in FHD Monitor	        62845.81
+    34in Ultrawide Monitor	    119316.86
+    AA Batteries (4-pack)	    5472
+    AAA Batteries (4-pack)	    4772.04
+    Apple Airpods Headphones	122100
+    Bose SoundSport Headphones	65893.41
+    Flatscreen TV	            72900
+    Google Phone	            190800
+    LG Dryer	                23400
+    LG Washing Machine	        25200
+    Lightning Charging Cable	17207.45
+    Macbook Pro Laptop	        399500
+    ThinkPad Laptop	            216997.83
+    USB-C Charging Cable	    15343.8
+    Vareebadd Phone         	50000
+    Wired Headphones	        12961.19
+    iPhone	                    265300
+
+# 6. Which products were sold in February at 548 Lincoln Street, Seattle, WA 98101, how many of each were sold, and what was the total revenue?
+
+SELECT Product, Quantity, ROUND(SUM(Quantity*price),2) AS Revenue
+FROM FebSales
+WHERE location = '548 Lincoln St, Seattle, WA 98101'
+GROUP BY Product;
+
+# RESULT: AA Batteries (4-pack)	2	7.68
 
 # 7. How many customers ordered more than 2 products at a time in February, and what was the average amount spent for those customers? 
+
+SELECT COUNT(distinct customers.acctnum) AS Customers, 
+ROUND(AVG(FebSales.Quantity*FebSales.price), 2) AS AveragePurchase
+FROM FebSales 
+LEFT JOIN customers
+ON FebSales.orderID = customers.order_id
+WHERE FebSales.Quantity > 2
+AND length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+# RESULT: 
+    Customers       AveragePurchase
+    278	            13.83
