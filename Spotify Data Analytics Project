@@ -1,0 +1,2 @@
+# In this SQL code, I'm queriying a database containing Spotify data (https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv) 
+and using PostgreSQL to answer the following questions or complete assigned tasks:
