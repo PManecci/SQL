@@ -121,14 +121,70 @@ GROUP BY Product
     Wired Headphones	            191
     iPhone	                        71
     
- # ADVANCED ANALYSIS QUESTIONS/REQUESTS:
+# ADVANCED ANALYSIS QUESTIONS/REQUESTS:
  
- # 1. Which locations in New York received at least 3 orders in January, and how many orders did they each receive? 
+# 1. Which locations in New York received at least 3 orders in January, and how many orders did they each receive? 
  
- # 2. How many of each type of headphone were sold in February? 
+SELECT distinct Location, SUM(Quantity) AS TotalOrders
+FROM JanSales
+WHERE location LIKE '%New York%'
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY location
+HAVING COUNT(orderID) > 2
+
+# ANSWER: 
+    Location                                    TotalOrders
+    148 Elm St, New York City, NY 10001	        3
+    515 Lincoln St, New York City, NY 10001	    3
+    916 Pine St, New York City, NY 10001	    3
+    961 Jefferson St, New York City, NY 10001	5
  
- # 3. What was the average amount per account spent in Febraury? 
+# 2. How many of each type of headphone were sold in February? 
  
- # 4. What was the average quantity of products purchased per account in Febraury? 
+SELECT Product, COUNT(Quantity) AS TotalSold
+FROM FebSales
+WHERE Product LIKE '%headphone%'
+AND length(orderid) = 6 
+AND orderid <> 'Order ID'
+GROUP BY Product;
+
+# ANSWER: 
+    Product                             TotalSold
+    Apple Airpods Headphones	        1011
+    Bose SoundSport Headphones	        834
+    Wired Headphones	                1186
+  
+# 3. What was the average amount per account spent in Febraury? 
+
+SELECT ROUND(SUM(FebSales.Quantity*FebSales.price)/COUNT(customers.acctnum),2) AS AverageFebSpend
+FROM FebSales
+JOIN customers
+ON FebSales.orderID = customers.order_id
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID';
+
+# ANSWER: Average Spend per Account for February was $190! 
  
- # 5. Which product brought in the most revenue in January and how much did it bring in total? 
+# 4. What was the average quantity of products purchased per account in Febraury?
+
+SELECT ROUND(SUM(FebSales.Quantity)/COUNT(customers.acctnum),0) AS AverageFebQuantity
+FROM FebSales
+JOIN customers
+ON FebSales.orderID = customers.order_id
+WHERE length(orderid) = 6 
+AND orderid <> 'Order ID'
+
+# ANSWER: Average Quantity per Account for February was 1 product
+ 
+# 5. Which product brought in the most revenue in January and how much did it bring in total? 
+
+SELECT Product, ROUND(SUM(Quantity*price),2) AS Revenue
+FROM JanSales
+WHERE length(orderID) = 6 
+AND orderID <> 'Order ID'
+GROUP BY Product
+ORDER BY Revenue DESC
+LIMIT 1;
+
+# ANSWER: The Macbook Pro Laptop was the highest Revenue earner in January with a total Revenue of $399,500
