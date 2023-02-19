@@ -1,2 +1,44 @@
-# In this SQL code, I'm queriying a database containing Spotify data (https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv) 
-and using PostgreSQL to answer the following questions or complete assigned tasks:
+# In this SQL code, I'm queriying a public database containing Spotify data (https://www.kaggle.com/datasets/equinxx/spotify-top-50-songs-in-2021?select=spotify_top50_2021.csv) 
+and using PostgreSQL to answer the following questions to gain insight into the trends in these Top 50 Songs:
+
+# 1. Do any artists appear more than once in this top 50 list and, if so, which artist appears the most? 
+
+SELECT artist_name, COUNT(id) AS total_songs
+FROM Spotifydata
+GROUP BY artist_name
+ORDER BY total_songs DESC;
+
+# ANSWER: Olivia Rodrigo and Doja Cat are tied with 4 songs each in the top 50! 
+
+# 2. Which of these top 50 songs had the highest popularity rating? 
+
+SELECT track_name, popularity
+FROM Spotifydata
+ORDER BY popularity DESC;
+
+# ANSWER: Three songs tied with popularity scores of 95: good 4 u by Olivia Rodrigo, Bad Habits by Ed Sheeran & Woman by Doja Cat
+
+# 3. Is a song's duration a determing factor in it's popularity score? Is there a trend favoring longer or shorter songs and what is the average song duration for these top 50?
+
+First, I found the Average song duration in Minutes (the duration is provided in milliseconds in the database): 
+
+SELECT ROUND((AVG(duration_ms)/1000)/60,2) AS Duration_Minutes
+FROM Spotifydata
+
+ANSWER: The average duration of all 50 top songs is 3 minutes and 29 seconds
+
+Then, I decided to look at shortest and longest songs and their correlating popularity scores:
+
+SELECT track_name, popularity, ROUND((duration_ms/1000)/60,2) AS Duration_Minutes
+FROM Spotifydata
+ORDER BY Duration_Minutes ASC
+LIMIT 1;
+
+SELECT track_name, popularity, ROUND((duration_ms/1000)/60,2) AS Duration_Minutes
+FROM Spotifydata
+ORDER BY Duration_Minutes DESC
+LIMIT 1;
+
+ANSWER: The shortest song, MONTERO (Call Me By Your Name) has a popularity score of 90 and the longest song, Drivers License has a popularity score of 92
+
+As a result there does not appear to be a wide range in song length within this data set and that duration does not appear to have a noticible impact on the popularity score.
