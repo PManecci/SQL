@@ -42,3 +42,45 @@ LIMIT 1;
 ANSWER: The shortest song, MONTERO (Call Me By Your Name) has a popularity score of 90 and the longest song, Drivers License has a popularity score of 92
 
 As a result there does not appear to be a wide range in song length within this data set and that duration does not appear to have a noticible impact on the popularity score.
+
+#Utilizing CTEs
+
+## Question: Calculate the average popularity for the artists in the Spotify data table. Then, for every artist with an average popularity of 90 or above, show their name, average popularity and label them as a "Top Star". 
+
+## Step 1: Creating a Temporary Table to show the average popularity score of each artist
+
+WITH popularityTable AS (
+    SELECT
+    artist_name, AVG(popularity) AS popularity_score
+    FROM Spotifydata
+    GROUP BY artist_name
+)
+
+SELECT artist_name,popularity_score
+FROM popularityTable;
+
+## Step 2: Label the artists with average popularity ratings above 90 as 'Top Stars'! 
+
+WITH popularityTable AS (
+    SELECT
+    artist_name, AVG(popularity) AS popularity_score
+    FROM Spotifydata
+    GROUP BY artist_name
+)
+
+SELECT artist_name, popularity_score, 'Top Star' AS tag
+FROM popularityTable
+WHERE popularity_score > 90=;
+
+## Results: 
+  artist_name         popularity_score    tag
+  Doja Cat	          90.75	              Top Star
+  Ed Sheeran	        95	                Top Star
+  Glass Animals	      94	                Top Star
+  Harry Styles	      90	                Top Star
+  Justin Bieber	      90	                Top Star
+  Lil Nas X	          90	                Top Star
+  Måneskin	          90.5	              Top Star
+  Olivia Rodrigo	    92.25	              Top Star
+  The Neighbourhood	  92	                Top Star
+The Weeknd	91.5	Top Star
