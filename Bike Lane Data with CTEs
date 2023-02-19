@@ -1,0 +1,46 @@
+# In this SQL code, I'm queriying a database containing bike lane data using PostgreSQL as well as applying CTEs
+
+# Presented Questions: 
+
+## 1. List all bike lanes with an average safety rating of 4.0 or higher
+
+WITH avgSafetyTable AS(
+    SELECT street, AVG(safetyrating) AS avgSafetyRating
+    FROM CityBikeLanes
+    GROUP BY street
+)
+
+SELECT street, avgSafetyRating
+FROM avgSafetyTable
+WHERE avgSafetyRating >= 4;
+
+## 2. Create a table showing the average safety rating for each of these bike lanes and a label that says "Safe Lane"
+
+WITH avgSafetyTable AS(
+    SELECT street, AVG(safetyrating) AS avgSafetyRating
+    FROM CityBikeLanes
+    GROUP BY street
+)
+
+SELECT street, avgSafetyRating, 'Safe Lane' AS tag
+FROM avgSafetyTable
+WHERE avgSafetyRating >= 4
+
+## Results: 
+street  avgSafetyRating tag
+Chestnut	4.25	Safe Lane
+Earp	4.3	Safe Lane
+Fieldcrest	4.8	Safe Lane
+Fred	4.6	Safe Lane
+Kensington	4.95	Safe Lane
+Locust	4.9	Safe Lane
+Morris	4.55	Safe Lane
+Mouse	4.4	Safe Lane
+Pine	4.95	Safe Lane
+Race	4.8	Safe Lane
+Running	4.4	Safe Lane
+South	4.5	Safe Lane
+Tasker	4.55	Safe Lane
+Thomas	4.65	Safe Lane
+Waverly	4.6	Safe Lane
+York	4.45	Safe Lane
