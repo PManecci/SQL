@@ -1,0 +1,21 @@
+# In this SQL code, I'm queriying a database containing bike lane data using PostgreSQL as well as applying Window Functions
+
+# Presented Request: a list of all the bike lanes, both safety ratings for each lane, the average safety rating for each lane, 
+  and a label with the recommendation as "Remove", "Leave As-Is", or "Improvements Needed".
+  
+## 1. I'm going to start with creating the list of all bike lanes, individual safety ratings and average safety rating using a window function:
+
+SELECT street, safetyrating,
+AVG(safetyrating) OVER (PARTITION BY street) as "Average_safety_rating"
+FROM CityBikeLanes;
+
+## 2. Now I'm going to add on to that function the requested recommendation labels based on the average safety ratings
+
+SELECT street, safetyrating,
+AVG(safetyrating) OVER (PARTITION BY street) as "Average_safety_rating",
+CASE 
+    WHEN AVG(safetyrating) OVER (PARTITION BY street) >= 4 THEN 'Leave-As-Is'
+    WHEN AVG(safetyrating) OVER (PARTITION BY street) < 2.5 THEN 'Remove'
+    ELSE 'Improvements Needed'
+END as recommendation
+FROM CityBikeLanes;
