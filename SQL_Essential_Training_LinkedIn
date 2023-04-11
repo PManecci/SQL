@@ -1,0 +1,20 @@
+Notes and Code written in SQL throughout completion of Walter Shields' SQL Essential Training course on LinkedIn Learning using the WSDA_Music Database
+
+*/
+Chapter 5: Discovering Insights in Data: Chapter Quiz
+/*
+
+1. How many invoices were billed to the city of Brussels? 
+
+CODE: 
+  SELECT *
+  FROM Invoice
+  WHERE BillingCity = 'Brussels'
+
+ANSWER: 7
+
+*/
+Chapter 
+/*
+
+1. 
