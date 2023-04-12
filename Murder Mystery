@@ -118,6 +118,49 @@ RESULTS: "Congrats, you found the murderer! But wait, there's more... If you thi
 transcript of the murderer to find the real villian behind this crime. If you feel especially confident in your SQL skills, try to complete this
 final step with no more than 2 queries. Use this same INSERT statement with your new suspect to check your answer."
 
+PART TWO:
 
+#1. Look up the interview transcript of our murderer!
+
+SELECT *
+FROM interview
+WHERE person_id = 67318
+
+RESULTS: "I was hired by a woman with a lot of money. I don't know her name but I know she's around 5'5" (65") or 5'7" (67"). 
+She has red hair and she drives a Tesla Model S. I know that she attended the SQL Symphony Concert 3 times in December 2017"
+
+#2. Search for mystery woman!
+/* I know that this information is going to require a join of multiple tables: 
+I can check income using the person's ssn in the income table, (COLUMN NAMES: ssn, annual_income)
+I can check gender, height, and hair color in the drivers_license table, (COLUMN NAMES: id (matches license_id), height, hair_color, gender)
+I can check attendance at the SQL Symhony using a person_id in the facebook_event_checkin table, (COLUMN NAMES: person_id, event_name, date)
+and all should relate to a single person in the person table (COLUMN NAMES: id (person_id), license_id (id) ssn, name)
+
+SELECT p.name
+FROM person AS p
+  JOIN drivers_license AS dl
+    ON dl.id = p.license_id
+  JOIN facebook_event_checkin AS f
+    ON f.person_id = p.id
+  JOIN income AS i
+    ON i.ssn = p.ssn
+WHERE
+  dl.gender = "female"
+  AND dl.hair_color = "red"
+  AND dl.height BETWEEN 65 AND 67
+  AND f.event_name = "SQL Symphony Concert"
+  AND f.date BETWEEN 20171201 AND 20171230
+GROUP BY p.id
+ORDER BY i.annual_income DESC
+
+RESULTS: Miranda Priestly
+
+#3. Check our results: 
+
+INSERT INTO solution VALUES (1, 'Miranda Priestly');
+  SELECT value FROM solution;
+  
+RESULTS: "Congrats, you found the brains behind the murder! Everyone in SQL City hails you as the greatest SQL detective of all time. 
+Time to break out the champagne!"
 
 
