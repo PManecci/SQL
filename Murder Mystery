@@ -1,0 +1,36 @@
+Documenting work and solution for The SQL Murder Mystery available at mystery.knightlab.com
+
+##THE DATABASE##
+
+TABLE NAMES: 
+crime_scene_report
+drivers_license
+facebook_event_checkin
+interview
+get_fit_now_member
+get_fit_now_check_in
+solution
+income
+person
+
+##THE MYSTERY##
+We are searching for who committed the murder that occurred on Jan. 15, 2018 in SQL City. 
+
+#1. Retrieve the crime scene report from the database: 
+*/ I first ran a select all on the crime_scene_report table to determine how the dates were formatted and the column headers, 
+from there I wrote the following query to pull the correct report for the case we are looking into /*
+
+SELECT *
+FROM crime_scene_report
+WHERE date = 20180115 AND city = "SQL City" AND type = "murder";
+
+RESULT: One report providing the following information: 
+"Security footage shows that there were 2 witnesses. 
+The first witness lives at the last house on "Northwestern Dr". 
+The second witness, named Annabel, lives somewhere on "Franklin Ave".
+
+#2. Locate the witnesses and their respective interviews:
+*/ Looking at the tables available the next step should be to review the interviews from the two witnesses - 
+I ran a query on the interview table and it provides only a person_id and transcript so I will have to use the person table 
+to locate the witness's person_id and then match that to the correct transcript /*
+
