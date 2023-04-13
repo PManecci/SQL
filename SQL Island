@@ -1,0 +1,140 @@
+Documenting work and solution for SQL Island available at https://sql-island.informatik.uni-kl.de/
+
+##THE DATABASE##
+
+VILLAGE: VillageID, Name, Chief
+INHABITANT: PersonID, Name, VillageID, Gender, Job, Gold, State
+ITEM: Item, Owner
+
+##THE GAME##
+
+#1. Write a query to show a list of all the islands inhabitants
+
+SELECT *
+FROM inhabitant
+
+#2. Write a query to show a list of all friendly island inhabitants
+
+SELECT *
+FROM inhabitant
+WHERE state = "friendly"
+
+#3. Find a friendly weaponsmith to forge us a sword
+
+SELECT *
+FROM inhabitant
+WHERE state = "friendly" AND job = "weaponsmith"
+
+#4. Try opening the search so we have more than one option including other smiths
+
+SELECT *
+FROM inhabitant
+WHERE state = "friendly" AND job LIKE "%smith"
+
+#5. Write a query to locate the personID you were just assigned
+
+SELECT personid
+FROM inhabitant
+WHERE name = "Stranger"
+
+#6. Now look up how much gold you have
+
+SELECT gold
+FROM inhabitant
+WHERE name = "Stranger"
+
+#7. Write a query to find a list of ownerless items you could sell to earn gold
+
+SELECT *
+FROM item
+WHERE owner IS NULL
+
+#8. Update all ownerless items to reflect you as the new owner
+
+UPDATE item
+SET owner = 20
+WHERE owner IS NULL
+
+#9. Then get a list of all of your new items
+
+SELECT *
+FROM item 
+WHERE owner = 20
+
+#10. Now search for friendly dealers or merchants who may want to purchase your new items
+
+SELECT *
+FROM inhabitant
+WHERE state = "friendly" AND job = "dealer" OR job = "merchant"
+
+#11. A merchant wants to purchase our ring and teapot - transfer ownership to her of both items
+
+UPDATE item
+SET owner = 15
+WHERE item = "ring" OR item = "teapot" AND owner = "20"
+
+#12. We don't have enough gold for the sword, update your name so we can apply for a job
+
+UPDATE inhabitant
+SET name = "Patrick"
+WHERE personid = 20
+
+#13. We enjoy baking so let's search for bakers in the village that we could work for
+
+SELECT *
+FROM inhabitant
+WHERE job = "baker"
+ORDER BY gold DESC
+
+#14. We earned our sword! Now let's search for a pilot to fly us home
+
+SELECT *
+FROM inhabitant
+WHERE job = "pilot"
+
+#15. His state is kidnapped, looks like we will have to rescue him first! 
+He's being held by Dirty Dieter in Onionville. Write a query to find out who the chief of Onionville is.
+
+SELECT inhabitant.name
+FROM inhabitant
+JOIN village ON village.villageid = inhabitant.villageid
+WHERE village.name = "Onionville" AND inhabitant.personid = village.chief
+
+#16. Dirty Dieter is hiding with the pilot at his sister's house - write a query to find out how many women live in Onionville. 
+
+SELECT COUNT(*)
+FROM inhabitant
+JOIN village ON village.villageid = inhabitant.villageid
+WHERE village.name = "Onionville" AND inhabitant.gender = "f"
+
+#17. Let's find her name
+
+SELECT inhabitant.name
+FROM inhabitant
+JOIN village ON village.villageid = inhabitant.villageid
+WHERE village.name = "Onionville" AND inhabitant.gender = "f"
+
+#18. Dirty Diane! We visit and he demands gold for release of the pilot. Let's see how much we could earn from all the bakers, merchants and dealers in the village. 
+
+SELECT SUM(gold)
+FROM inhabitant
+WHERE job IN ("baker", "merchant", "dealer")
+
+#19. Determine the average amount of gold held by people in each state (friendly, etc...)
+
+SELECT state, AVG(gold) 
+FROM inhabitant
+GROUP BY state
+
+#20. Looks like the villians have the most gold, so my best option is just to take out Dirty Dieter with my sword. Might as well take out Dirty Diane as well!
+
+DELETE FROM inhabitant
+WHERE name = "Dirty Diane"
+
+#21. Now let's release the pilot
+
+UPDATE inhabitant
+SET state = "friendly"
+WHERE job = "pilot"
+
+The pilot agrees to fly me home! Challenge completed! 
