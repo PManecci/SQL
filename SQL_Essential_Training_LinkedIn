@@ -1,20 +1,47 @@
-Notes and Code written in SQL throughout completion of Walter Shields' SQL Essential Training course on LinkedIn Learning using the WSDA_Music Database
+Project Solution for Walter Shields' SQL Essential Training course on LinkedIn Learning using the WSDA_Music Database
 
-*/
-Chapter 5: Discovering Insights in Data: Chapter Quiz
-/*
+##PART 1##
 
-1. How many invoices were billed to the city of Brussels? 
+PROBLEM: There is a financial discrepency between 2011 and 2012
+TASK: Locate the discrepency and narrow down a list of the prime suspects (people or items) for the possible cause of discrepency
 
-CODE: 
-  SELECT *
-  FROM Invoice
-  WHERE BillingCity = 'Brussels'
+##PROCESS##
 
-ANSWER: 7
+/* Start with high-level data mining - look at invoice records for dates between 2011 and 2012
+Start with the number of records and total sales (sum of invoices) */
 
-*/
-Chapter 
-/*
+SELECT Count(InvoiceID), SUM(Total)
+FROM Invoice
+WHERE InvoiceDate LIKE "2011%" OR InvoiceDate LIKE "2012%"
 
-1. 
+RESULTS: 167 Invoices resulting in a Total earning of $1,947.97
+
+/* Now start drilling down to match customers and employees to those records and 
+search for disrepencies between invoices in this time frame with invoices over all available data */
+
+/* 1. List of customers who are associated with invoices during time period */
+
+SELECT I.InvoiceId, I.CustomerId, C.FirstName, C.LastName
+FROM Invoice AS I
+  JOIN Customer AS C
+    ON C.CustomerId = I.CustomerId
+WHERE I.InvoiceDate LIKE "2011% OR I.InvoiceDate LIKE "2012%"
+GROUP BY C.CustomerId
+
+RESULTS: A list of 60 individual customers that had invoices during this time frame
+
+/* 2. List of Employees that are associated with invoices during time period */
+
+SELECT E.FirstName, E.LastName
+FROM Invoice AS I
+  JOIN Customer AS C
+    ON C.CustomerId = I.CustomerId
+  JOIN Employee AS E
+    ON C.SupportRepId = E.EmployeeId
+WHERE I.InvoiceDate LIKE "2011% OR I.InvoiceDate LIKE "2012%"
+GROUP BY E.EmployeeId
+
+RESULTS: A list of 3 employees listed as Support Reps for invoices during time period: Jane Peacock, Margaret Park & Steve Johnson
+
+/* 3. Average amount of individual invoices from this time period */
+
