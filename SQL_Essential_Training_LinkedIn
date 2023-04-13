@@ -1,6 +1,6 @@
 Project Solution for Walter Shields' SQL Essential Training course on LinkedIn Learning using the WSDA_Music Database
 
-##PART 1##
+##PROJECT##
 
 PROBLEM: There is a financial discrepency between 2011 and 2012
 TASK: Locate the discrepency and narrow down a list of the prime suspects (people or items) for the possible cause of discrepency
@@ -43,5 +43,39 @@ GROUP BY E.EmployeeId
 
 RESULTS: A list of 3 employees listed as Support Reps for invoices during time period: Jane Peacock, Margaret Park & Steve Johnson
 
-/* 3. Average amount of individual invoices from this time period */
+/* 3. Find invoices with totals larger than the average invoice total for this time period */
+
+SELECT InvoiceId, Total
+FROM Invoice
+WEHERE Total > (SELECT AVG(Total)
+                FROM Invoice 
+                WHERE InvoiceDate LIKE "2011% OR InvoiceDate LIKE "2012%")
+ORDER BY Total DESC
+
+RESULTS: 63 invoices had totals greater than the average with one stand out of $1000.86 for a single invoice (InvoiceId 413)
+
+/* 4. Find the average invoice total across all invoices regardless of date - are there any other invoices this large? */
+
+SELECT AVG(Total)
+FROM Invoice
+
+RESULTS: The average total invoice across all sales is only $8.06 and the second largest total invoice for any date is $25.86 
+so Invoice 413 with a Total of $1000.86 is definitely our anomaly! 
+
+/* 5. Find the Customer and Employee associated with this particular invoice */
+
+SELECT I.InvoiceId, I.Total, C.FirstName, C.LastName, E.FirstName, E.LastName
+FROM Invoice AS I
+  JOIN Customer AS C
+    ON C.CustomerId = I.CustomerId
+  JOIN Employee AS E
+    ON C.SupportRepId = E.EmployeeId
+WHERE I.InvoiceId = 413
+
+RESULTS: The Customer associated with this invoice is John Doeein and the Employee associated with the invoice is Jane Peacock
+
+##CONCLUSION##
+
+I looked as these two people and the Customer is missing many key values (no address, company, or contact information) so it looks like the
+person we need to talk to regarding this financial discrepency is Jane Peacock! 
 
